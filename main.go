@@ -19,11 +19,12 @@ func main() {
 	http.HandleFunc("/", homeController.Index)
 
 	// 2. Register & Login
-	http.HandleFunc("/register", authController.Register)
-	http.HandleFunc("/login", authController.Login)
+	http.Handle("/course", authController.RequireLogin(authController.CheckRole(1, http.HandlerFunc(courseController.Index))))
+	http.HandleFunc("/register", authController.RegisterHandler)
+	http.HandleFunc("/login", authController.LoginHandler)
 
 	// 3. User -> Course
-	http.HandleFunc("/course", courseController.Index)
+	// http.HandleFunc("/course", courseController.Index)
 
 	log.Println("Starting server on port 8080")
 	http.ListenAndServe(":8080", nil)
